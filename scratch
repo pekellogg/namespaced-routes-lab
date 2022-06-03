@@ -1,0 +1,48 @@
+scratch
+-------
+Preference class (store preferences)
+Note: 1 instance of Preference, not preference per artist/song pairing
+
+allow_create_songs (boolean)
+------------------
+Allows for creation of new songs
+Used to control the ability to add new songs to the system.
+
+allow_create_artists (boolean)
+--------------------
+Allows for creation of new artists
+Used to control the ability to add new artists to the system.
+
+rails g model Preference allow_create_songs:boolean allow_create_artists:boolean --no-test-framework
+
+After model, run 
+$ rake preferences:load #code works in browser
+# triggers lib/tasks/preferences.rake
+# saves Preference instance to DB
+
+Create a PreferencesController, routes, and views under an Admin module
+ensure songs#new & artists#new check that creating new instances is enabled using Preference
+If enabled, render(:new), else redirect to /songs and /artists
+
+Hint
+Remember, only 1 instance of Preference class saved to DB.
+to determine if creating songs/artists is enabled, find first instance of Preference & use logic to redirect or display view
+
+code
+----
+rails g model Preference allow_create_songs:boolean allow_create_artists:boolean --no-test-framework
+rake preferences:load
+
+mkdir ./app/controllers/admin
+touch ./app/controllers/admin/preferences_controller.rb
+
+class Admin::PreferencesController < ApplicationController
+end
+
+mkdir ./app/views/admin/
+touch ./app/views/admin/index.html.erb
+
+# config/routes.rb
+namespace :admin do
+  resources :preferences, only: [:index]
+end

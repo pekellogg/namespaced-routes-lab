@@ -8,16 +8,16 @@ class ArtistsController < ApplicationController
   end
 
   def new
-    @artist = Artist.new
+    @preference = Preference.last
+    @preference.allow_create_artists ? @artist = Artist.new : redirect_to(artists_path)
   end
 
   def create
     @artist = Artist.new(artist_params)
-
     if @artist.save
-      redirect_to @artist
+      redirect_to(@artist)
     else
-      render :new
+      render(:new)
     end
   end
 
@@ -27,13 +27,11 @@ class ArtistsController < ApplicationController
 
   def update
     @artist = Artist.find(params[:id])
-
     @artist.update(artist_params)
-
     if @artist.save
-      redirect_to @artist
+      redirect_to(@artist)
     else
-      render :edit
+      render(:edit)
     end
   end
 
@@ -41,7 +39,7 @@ class ArtistsController < ApplicationController
     @artist = Artist.find(params[:id])
     @artist.destroy
     flash[:notice] = "Artist deleted."
-    redirect_to artists_path
+    redirect_to(artists_path)
   end
 
   private
